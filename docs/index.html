@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta AI SDK - Developer Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Meta AI SDK</div>
+                <div class="sidebar-version">v2.0.0</div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <a href="#introduction" class="nav-link">Introduction</a>
+                    <a href="#installation" class="nav-link">Installation</a>
+                    <a href="#authentication" class="nav-link">Authentication</a>
+                    <a href="#quick-start" class="nav-link">Quick Start</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Core API</div>
+                    <a href="#image-generation" class="nav-link">Image Generation</a>
+                    <a href="#video-generation" class="nav-link">Video Generation</a>
+                    <a href="#image-analysis" class="nav-link">Image Analysis</a>
+                    <a href="#chat" class="nav-link">Chat & Text</a>
+                    <a href="#image-upload" class="nav-link">Image Upload</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Advanced</div>
+                    <a href="#streaming" class="streaming">Streaming Responses</a>
+                    <a href="#async-video" class="nav-link">Async Video Jobs</a>
+                    <a href="#extending-videos" class="nav-link">Extending Videos</a>
+                    <a href="#error-handling" class="nav-link">Error Handling</a>
+                    <a href="#challenge-pages" class="nav-link">Challenge Pages</a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Reference</div>
+                    <a href="#api-reference" class="nav-link">API Reference</a>
+                    <a href="#http-api" class="nav-link">HTTP REST Server</a>
+                    <a href="#cli" class="nav-line">CLI Reference</a>
+                    <a href="#examples" class="nav-link">Examples</a>
+                </div>
+            </nav>
+        </aside>
+
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+
+        <main class="main-content">
+            <div class="content">
+                <!-- Hero -->
+                <section class="hero">
+                    <div class="hero-badge">Unofficial Python SDK</div>
+                    <h1 class="hero-title">Meta AI SDK</h1>
+                    <p class="hero-subtitle">Generate images, create videos, analyze media, and chat with Meta's Llama 3 — all through a clean Python interface. No API keys required.</p>
+                    <div class="hero-actions">
+                        <a href="#quick-start" class="btn btn-primary">Get Started →</a>
+                        <a href="#api-reference" class="btn btn-secondary">API Reference</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label">Core Methods</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">API Keys Needed</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">~30s</div>
+                            <div class="stat-label">Image Generation</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">MIT</div>
+                            <div class="stat-label">License</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Introduction -->
+                <section id="introduction" class="doc-section">
+                    <h2>Introduction</h2>
+                    <p>The <code>metaai_api</code> package is an unofficial Python SDK for <a href="https://meta.ai" target="_blank" rel="noopener">Meta AI</a>. It wraps Meta's internal GraphQL and SSE APIs to provide a clean Python interface for:</p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                            </div>
+                            <div class="feature-title">Image Generation</div>
+                            <div class="feature-desc">Text-to-image generation with orientation control (16:9, 9:16, 1:1)</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><path d="M7 2v20"/><path d="M17 2v20"/><path d="M2 12h20"/><path d="M2 7h5"/><path d="M2 17h5"/><path d="M17 17h5"/><path d="M17 7h5"/></svg>
+                            </div>
+                            <div class="feature-title">Video Generation</div>
+                            <div class="feature-desc">Text-to-video with auto-polling and async job support</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </div>
+                            <div class="feature-title">Image Analysis</div>
+                            <div class="feature-desc">Upload images and ask Llama 3 to describe or analyze them</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </div>
+                            <div class="feature-title">Chat & Reasoning</div>
+                            <div class="feature-desc">Full conversational AI with streaming support</div>
+                        </div>
+                    </div>
+                    <div class="callout callout-info">
+                        <div class="callout-title">How it works</div>
+                        <div class="callout-body">The SDK authenticates using browser cookies from <code>meta.ai</code> — the same session your browser uses. It communicates with Meta's internal DGW (Dynamic Gateway) via GraphQL SSE subscriptions, the same protocol the web interface uses.</div>
+                    </div>
+                </section>
+
+                <!-- Installation -->
+                <section id="installation" class="doc-section">
+                    <h2>Installation</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-copy="pip install metaai-api">Copy</button>
+                        </div>
+                        <pre><code>pip install metaai-api</code></pre>
+                    </div>
+                    <h3>Dependencies</h3>
+                    <p>The package automatically installs these dependencies:</p>
+                    <ul class="dependency-list">
+                        <li><code>requests</code> — HTTP client for API calls</li>
+                        <li><code>requests-html</code> — HTML rendering for page scraping</li>
+                        <li><code>python-dotenv</code> — Environment variable loading</li>
+                        <li><code>beautifulsoup4</code> — HTML parsing for challenge pages</li>
+                    </ul>
+                    <h3>Optional Dependencies</h3>
+                    <p>For the HTTP REST server mode:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-copy="pip install metaai-api[server]">Copy</button>
+                        </div>
+                        <pre><code>pip install metaai-api[server]</code></pre>
+                    </div>
+                    <p>This installs <code>fastapi</code>, <code>uvicorn</code>, and <code>pydantic</code>.</p>
+                </section>
+
+                <!-- Authentication -->
+                <section id="authentication" class="doc-section">
+                    <h2>Authentication</h2>
+                    <p>Meta AI uses <strong>cookie-based authentication</strong> — no API keys or bearer tokens needed. The SDK authenticates as if it were your browser session.</p>
+
+                    <h3>Required Cookies</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Cookie</th>
+                                <th>Purpose</th>
+                                <th>Lifetime</th>
+                                <th>Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>datr</code></td>
+                                <td>Device identifier</td>
+                                <td>~2 years</td>
+                                <td><span class="badge badge-required">Required</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>ecto_1_sess</code></td>
+                                <td>Session token</td>
+                                <td>~1 hour</td>
+                                <td><span class="badge badge-required">Required</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>abra_sess</code></td>
+                                <td>Extended session</td>
+                                <td>~30 days</td>
+                                <td><span class="badge badge-optional">Optional</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Getting Your Cookies</h3>
+                    <ol class="steps">
+                        <li>Open <a href="https://meta.ai" target="_blank" rel="noopener">https://meta.ai</a> in Chrome and log in</li>
+                        <li>Open DevTools: <kbd>F12</kbd> or <kbd>Cmd + Option + I</kbd></li>
+                        <li>Navigate to <strong>Application</strong> tab → <strong>Cookies</strong> → <code>https://meta.ai</code></li>
+                        <li>Copy the values for <code>datr</code> and <code>ecto_1_sess</code></li>
+                    </ol>
+
+                    <h3>Configuring the SDK</h3>
+                    <p>Create a <code>.env.metaai</code> file in your project root:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">env</span>
+                            <button class="copy-btn" data-copy="META_AI_DATR=your_datr_value
+META_AI_ECTO_1_SESS=your_ecto_1_sess_value
+META_AI_ABRA_SESS=your_abra_sess_value">Copy</button>
+                        </div>
+                        <pre><code>META_AI_DATR=your_datr_value
+META_AI_ECTO_1_SESS=your_ecto_1_sess_value
+META_AI_ABRA_SESS=your_abra_sess_value</code></pre>
+                    </div>
+
+                    <p>Or pass cookies directly in code:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI(cookies={
+    "datr": "your_datr_value",
+    "ecto_1_sess": "your_ecto_1_sess_value"
+})">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI(cookies={
+    "datr": "your_datr_value",
+    "ecto_1_sess": "your_ecto_1_sess_value"
+})</code></pre>
+                    </div>
+
+                    <div class="callout callout-warning">
+                        <div class="callout-title">Cookie Expiry</div>
+                        <div class="callout-body">The <code>ecto_1_sess</code> cookie expires frequently (~1 hour). If API calls fail with authentication errors, refresh this cookie from your browser. The SDK will auto-extract a fresh access token from the meta.ai page on initialization.</div>
+                    </div>
+                </section>
+
+                <!-- Quick Start -->
+                <section id="quick-start" class="doc-section">
+                    <h2>Quick Start</h2>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+import json
+
+ai = MetaAI()  # auto-loads cookies from .env
+
+# Generate an image
+result = ai.generate_image_new(
+    prompt=\"a cyberpunk city at night, neon lights\",
+    orientation=\"LANDSCAPE\",
+    num_images=1
+)
+print(json.dumps(result, indent=2))">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+import json
+
+ai = MetaAI()  # auto-loads cookies from .env
+
+# Generate an image
+result = ai.generate_image_new(
+    prompt="a cyberpunk city at night, neon lights",
+    orientation="LANDSCAPE",
+    num_images=1
+)
+print(json.dumps(result, indent=2))</code></pre>
+                    </div>
+
+                    <div class="callout callout-success">
+                        <div class="callout-title">Expected Output</div>
+                        <div class="callout-body">
+                            <pre class="inline-pre">{
+  "success": true,
+  "image_urls": [
+    "https://scontent.fyvr4-1.fna.fbcdn.net/v/t39.8562-6/..."
+  ],
+  "status": "READY"
+}</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Image Generation -->
+                <section id="image-generation" class="doc-section">
+                    <h2>Image Generation</h2>
+                    <p>Generate images from text prompts using Meta's image generation model. Generation typically takes 30-120 seconds.</p>
+
+                    <h3>Method Signature</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                        </div>
+                        <pre><code>ai.generate_image_new(
+    prompt: str,
+    orientation: str = "LANDSCAPE",
+    num_images: int = 1
+) -> dict</code></pre>
+                    </div>
+
+                    <h3>Parameters</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>prompt</code></td>
+                                <td><code>str</code></td>
+                                <td>—</td>
+                                <td>Text description of the image to generate</td>
+                            </tr>
+                            <tr>
+                                <td><code>orientation</code></td>
+                                <td><code>str</code></td>
+                                <td><code>"LANDSCAPE"</code></td>
+                                <td>Aspect ratio: <code>"LANDSCAPE"</code> (16:9), <code>"VERTICAL"</code> (9:16), or <code>"SQUARE"</code> (1:1)</td>
+                            </tr>
+                            <tr>
+                                <td><code>num_images</code></td>
+                                <td><code>int</code></td>
+                                <td><code>1</code></td>
+                                <td>Number of images to generate (max 4)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Response Schema</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                        </div>
+                        <pre><code>{
+  "success": true,           // Whether generation succeeded
+  "image_urls": [             // List of generated image URLs
+    "https://scontent.fyvr4-1.fna.fbcdn.net/v/t39.8562-6/..."
+  ],
+  "status": "READY",         // READY, PROCESSING, or FAILED
+  "error": null              // Error message if failed
+}</code></pre>
+                    </div>
+
+                    <h3>Example: Multiple Orientations</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI()
+
+for orientation in ["LANDSCAPE", "VERTICAL", "SQUARE"]:
+    result = ai.generate_image_new(
+        prompt=\"a serene mountain landscape at golden hour\",
+        orientation=orientation,
+        num_images=1
+    )
+    if result["success"]:
+        print(f\"{orientation}: {result['image_urls'][0]}\")">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI()
+
+for orientation in ["LANDSCAPE", "VERTICAL", "SQUARE"]:
+    result = ai.generate_image_new(
+        prompt="a serene mountain landscape at golden hour",
+        orientation=orientation,
+        num_images=1
+    )
+    if result["success"]:
+        print(f"{orientation}: {result['image_urls'][0]}")</code></pre>
+                    </div>
+                </section>
+
+                <!-- Video Generation -->
+                <section id="video-generation" class="doc-section">
+                    <h2>Video Generation</h2>
+                    <p>Generate short video clips from text prompts. Videos are generated asynchronously — the SDK polls for completion automatically.</p>
+
+                    <h3>Method Signature</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                        </div>
+                        <pre><code>ai.generate_video_new(
+    prompt: str,
+    auto_poll: bool = True,
+    max_poll_attempts: int = 15,
+    poll_wait_seconds: int = 3
+) -> dict</code></pre>
+                    </div>
+
+                    <h3>Parameters</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>prompt</code></td>
+                                <td><code>str</code></td>
+                                <td>—</td>
+                                <td>Text description of the video to generate</td>
+                            </tr>
+                            <tr>
+                                <td><code>auto_poll</code></td>
+                                <td><code>bool</code></td>
+                                <td><code>True</code></td>
+                                <td>Wait for video to be ready before returning</td>
+                            </tr>
+                            <tr>
+                                <td><code>max_poll_attempts</code></td>
+                                <td><code>int</code></td>
+                                <td><code>15</code></td>
+                                <td>Maximum number of polling attempts</td>
+                            </tr>
+                            <tr>
+                                <td><code>poll_wait_seconds</code></td>
+                                <td><code>int</code></td>
+                                <td><code>3</code></td>
+                                <td>Seconds between polling attempts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Response Schema</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                        </div>
+                        <pre><code>{
+  "success": true,
+  "video_urls": [           // Direct video file URLs
+    "https://video.fyvr4-1.fna.fbcdn.net/v/t42.1792-2/..."
+  ],
+  "media_ids": ["1234567890"],  // Meta internal media IDs
+  "conversation_id": "abc123",
+  "status": "READY"
+}</code></pre>
+                    </div>
+
+                    <h3>Example: Generate and Download</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="import requests
+from metaai_api import MetaAI
+
+ai = MetaAI()
+
+result = ai.generate_video_new(
+    prompt=\"timelapse of stars moving across the night sky\",
+    auto_poll=True,
+    max_poll_attempts=20,
+    poll_wait_seconds=4
+)
+
+if result["success"]:
+    url = result["video_urls"][0]
+    response = requests.get(url)
+    with open("stars_timelapse.mp4", "wb") as f:
+        f.write(response.content)
+    print(f\"Saved video: {len(response.content)} bytes\")">Copy</button>
+                        </div>
+                        <pre><code>import requests
+from metaai_api import MetaAI
+
+ai = MetaAI()
+
+result = ai.generate_video_new(
+    prompt="timelapse of stars moving across the night sky",
+    auto_poll=True,
+    max_poll_attempts=20,
+    poll_wait_seconds=4
+)
+
+if result["success"]:
+    url = result["video_urls"][0]
+    response = requests.get(url)
+    with open("stars_timelapse.mp4", "wb") as f:
+        f.write(response.content)
+    print(f"Saved video: {len(response.content)} bytes")</code></pre>
+                    </div>
+
+                    <div class="callout callout-info">
+                        <div class="callout-title">Generation Time</div>
+                        <div class="callout-body">Video generation typically takes 20-45 seconds. The SDK polls automatically with adaptive backoff. For longer videos, increase <code>max_poll_attempts</code> or <code>poll_wait_seconds</code>.</div>
+                    </div>
+                </section>
+
+                <!-- Image Analysis -->
+                <section id="image-analysis" class="doc-section">
+                    <h2>Image Analysis (Vision)</h2>
+                    <p>Upload an image and ask Meta AI to describe, analyze, or answer questions about it. This uses Llama 3's vision capabilities.</p>
+
+                    <h3>Workflow</h3>
+                    <ol class="steps">
+                        <li><strong>Upload</strong> the image to get a <code>media_id</code></li>
+                        <li><strong>Prompt</strong> with your question, passing the <code>media_id</code></li>
+                    </ol>
+
+                    <h3>Example</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI()
+
+# Step 1: Upload the image
+upload = ai.upload_image(\"/path/to/photo.jpg\")
+print(f\"Upload success: {upload['success']}\")
+
+if upload[\"success\"]:
+    media_id = upload[\"media_id\"]
+
+    # Step 2: Ask about the image
+    response = ai.prompt(
+        \"What objects are in this image? Describe the scene.\",
+        media_ids=[media_id]
+    )
+    print(response[\"message\"])</code></button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI()
+
+# Step 1: Upload the image
+upload = ai.upload_image("/path/to/photo.jpg")
+print(f"Upload success: {upload['success']}")
+
+if upload["success"]:
+    media_id = upload["media_id"]
+
+    # Step 2: Ask about the image
+    response = ai.prompt(
+        "What objects are in this image? Describe the scene.",
+        media_ids=[media_id]
+    )
+    print(response["message"])</code></pre>
+                    </div>
+
+                    <h3>Supported Image Formats</h3>
+                    <p>JPEG, PNG, WebP, GIF (non-animated). Maximum file size: 10MB.</p>
+                </section>
+
+                <!-- Chat -->
+                <section id="chat" class="doc-section">
+                    <h2>Chat & Text</h2>
+                    <p>Send text messages to Meta AI for conversation, reasoning, coding help, or general Q&A.</p>
+
+                    <h3>Method Signature</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                        </div>
+                        <pre><code>ai.prompt(
+    message: str,
+    stream: bool = False,
+    media_ids: list = None
+) -> dict or generator</code></pre>
+                    </div>
+
+                    <h3>Simple Chat</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI()
+
+response = ai.prompt(\"Explain quantum computing in simple terms\")
+print(response[\"message\"])">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI()
+
+response = ai.prompt("Explain quantum computing in simple terms")
+print(response["message"])</code></pre>
+                    </div>
+
+                    <h3>Response Schema</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                        </div>
+                        <pre><code>{
+  "message": "Quantum computing is...",  // The AI's response text
+  "sources": [                           // Search result references (if any)
+    {
+      "title": "...",
+      "url": "https://..."
+    }
+  ]
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Image Upload -->
+                <section id="image-upload" class="doc-section">
+                    <h2>Image Upload</h2>
+                    <p>Upload images to Meta AI's servers for use in analysis or as generation references.</p>
+
+                    <h3>Method Signature</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                        </div>
+                        <pre><code>ai.upload_image(file_path: str) -> dict</code></pre>
+                    </div>
+
+                    <h3>Response Schema</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">json</span>
+                        </div>
+                        <pre><code>{
+  "success": true,
+  "media_id": "1234567890abcdef",  // Use this in prompt() calls
+  "file_size": 245862
+}</code></pre>
+                    </div>
+
+                    <div class="callout callout-warning">
+                        <div class="callout-title">Upload Reliability</div>
+                        <div class="callout-body">Uploads use Meta's <code>rupload.meta.ai</code> endpoint with OAuth authentication. The SDK handles 412 (Precondition Failed) errors with exponential backoff automatically.</div>
+                    </div>
+                </section>
+
+                <!-- Streaming -->
+                <section id="streaming" class="doc-section">
+                    <h2>Streaming Responses</h2>
+                    <p>Enable streaming to receive tokens as they're generated, instead of waiting for the complete response.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI()
+
+# Stream tokens as they arrive
+for chunk in ai.prompt(\"Write a poem about artificial intelligence\", stream=True):
+    print(chunk, end=\"\", flush=True)">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI()
+
+# Stream tokens as they arrive
+for chunk in ai.prompt("Write a poem about artificial intelligence", stream=True):
+    print(chunk, end="", flush=True)</code></pre>
+                    </div>
+
+                    <div class="callout callout-info">
+                        <div class="callout-title">How Streaming Works</div>
+                        <div class="callout-body">The SDK uses Server-Sent Events (SSE) over Meta's GraphQL streaming endpoint. Tokens are yielded as they arrive from the model, typically at ~50ms intervals.</div>
+                    </div>
+                </section>
+
+                <!-- Async Video -->
+                <section id="async-video" class="doc-section">
+                    <h2>Async Video Jobs</h2>
+                    <p>For applications that need to submit multiple videos without blocking, use the async pattern:</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+import time
+
+ai = MetaAI()
+
+# Submit without waiting
+job = ai.generate_video_new(
+    prompt=\"a cat playing piano\",
+    auto_poll=False
+)
+print(f\"Job submitted: {job['conversation_id']}\")
+
+# Poll manually
+while True:
+    time.sleep(5)
+    result = ai.generate_video_new(
+        prompt=\"a cat playing piano\",
+        auto_poll=True
+    )
+    if result[\"status\"] == \"READY\":
+        break
+
+print(f\"Video ready: {result['video_urls']}\")">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+import time
+
+ai = MetaAI()
+
+# Submit without waiting
+job = ai.generate_video_new(
+    prompt="a cat playing piano",
+    auto_poll=False
+)
+print(f"Job submitted: {job['conversation_id']}")
+
+# Poll manually
+while True:
+    time.sleep(5)
+    result = ai.generate_video_new(
+        prompt="a cat playing piano",
+        auto_poll=True
+    )
+    if result["status"] == "READY":
+        break
+
+print(f"Video ready: {result['video_urls']}")</code></pre>
+                    </div>
+                </section>
+
+                <!-- Extending Videos -->
+                <section id="extending-videos" class="doc-section">
+                    <h2>Extending Videos</h2>
+                    <p>Extend an existing generated video with additional content using its media ID.</p>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI()
+
+result = ai.extend_video(
+    source_media_id=\"1234567890\",  # From a previous generation
+    prompt=\"continue the scene with rain starting to fall\"
+)
+print(result)">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI()
+
+result = ai.extend_video(
+    source_media_id="1234567890",  # From a previous generation
+    prompt="continue the scene with rain starting to fall"
+)
+print(result)</code></pre>
+                    </div>
+                </section>
+
+                <!-- Error Handling -->
+                <section id="error-handling" class="doc-section">
+                    <h2>Error Handling</h2>
+                    <p>The SDK provides structured error responses and custom exceptions.</p>
+
+                    <h3>Exception Types</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Exception</th>
+                                <th>When Raised</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>FacebookInvalidCredentialsException</code></td>
+                                <td>Cookie authentication fails or session expires</td>
+                            </tr>
+                            <tr>
+                                <td><code>FacebookRegionBlocked</code></td>
+                                <td>Meta AI is not available in your region</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Error Response Pattern</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI, FacebookInvalidCredentialsException
+
+try:
+    ai = MetaAI()
+    result = ai.generate_image_new(prompt=\"test\")
+except FacebookInvalidCredentialsException:
+    print(\"Session expired. Please refresh your cookies.\")
+except FacebookRegionBlocked:
+    print(\"Meta AI is not available in your region.\")">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI, FacebookInvalidCredentialsException
+
+try:
+    ai = MetaAI()
+    result = ai.generate_image_new(prompt="test")
+except FacebookInvalidCredentialsException:
+    print("Session expired. Please refresh your cookies.")
+except FacebookRegionBlocked:
+    print("Meta AI is not available in your region.")</code></pre>
+                    </div>
+
+                    <h3>Retry Logic</h3>
+                    <p>The SDK automatically retries failed <code>prompt()</code> calls up to 3 times with exponential backoff. GraphQL errors like <code>GRAPHQL_VALIDATION_FAILED</code> trigger automatic fallback to alternative doc IDs.</p>
+                </section>
+
+                <!-- Challenge Pages -->
+                <section id="challenge-pages" class="doc-section">
+                    <h2>Challenge Pages</h2>
+                    <p>Meta AI occasionally presents bot-detection challenge pages. The SDK handles these automatically:</p>
+                    <ol class="steps">
+                        <li>Detects challenge pages via HTML content analysis</li>
+                        <li>Submits verification POST requests to clear the challenge</li>
+                        <li>Extracts fresh cookies and access tokens from the response</li>
+                        <li>Retries the original request with updated credentials</li>
+                    </ol>
+                    <div class="callout callout-info">
+                        <div class="callout-title">Automatic Handling</div>
+                        <div class="callout-body">In most cases, you don't need to worry about challenge pages. The SDK's <code>detect_challenge_page()</code> and <code>handle_meta_ai_challenge()</code> utilities handle the full flow transparently.</div>
+                    </div>
+                </section>
+
+                <!-- API Reference -->
+                <section id="api-reference" class="doc-section">
+                    <h2>API Reference</h2>
+                    <p>Complete reference for all public methods on the <code>MetaAI</code> class.</p>
+
+                    <h3>MetaAI Class</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                        </div>
+                        <pre><code>class MetaAI:
+    def __init__(
+        self,
+        cookies: dict = None,
+        env_path: str = ".env.metaai"
+    )</code></pre>
+                    </div>
+
+                    <div class="api-method">
+                        <div class="api-method-header">
+                            <span class="api-method-name">prompt</span>
+                            <span class="api-method-signature">(message, stream=False, media_ids=None)</span>
+                        </div>
+                        <div class="api-method-desc">Send a text message to Meta AI. Returns a dict with <code>message</code> and <code>sources</code>. When <code>stream=True</code>, returns a generator yielding text chunks.</div>
+                    </div>
+
+                    <div class="api-method">
+                        <div class="api-method-header">
+                            <span class="api-method-name">generate_image_new</span>
+                            <span class="api-method-signature">(prompt, orientation="LANDSCAPE", num_images=1)</span>
+                        </div>
+                        <div class="api-method-desc">Generate images from a text prompt. Returns a dict with <code>image_urls</code>, <code>status</code>, and <code>success</code>.</div>
+                    </div>
+
+                    <div class="api-method">
+                        <div class="api-method-header">
+                            <span class="api-method-name">generate_video_new</span>
+                            <span class="api-method-signature">(prompt, auto_poll=True, max_poll_attempts=15, poll_wait_seconds=3)</span>
+                        </div>
+                        <div class="api-method-desc">Generate a video from a text prompt. When <code>auto_poll=True</code>, blocks until the video is ready. Returns a dict with <code>video_urls</code>, <code>media_ids</code>, and <code>status</code>.</div>
+                    </div>
+
+                    <div class="api-method">
+                        <div class="api-method-header">
+                            <span class="api-method-name">upload_image</span>
+                            <span class="api-method-signature">(file_path)</span>
+                        </div>
+                        <div class="api-method-desc">Upload an image file to Meta AI servers. Returns a dict with <code>media_id</code> for use in <code>prompt()</code> calls.</div>
+                    </div>
+
+                    <div class="api-method">
+                        <div class="api-method-header">
+                            <span class="api-method-name">extend_video</span>
+                            <span class="api-method-signature">(source_media_id, prompt)</span>
+                        </div>
+                        <div class="api-method-desc">Extend an existing video with new content. The <code>source_media_id</code> comes from a previous <code>generate_video_new()</code> call.</div>
+                    </div>
+
+                    <div class="api-method">
+                        <div class="api-method-header">
+                            <span class="api-method-name">retry</span>
+                            <span class="api-method-signature">(func, *args, **kwargs)</span>
+                        </div>
+                        <div class="api-method-desc">Retry wrapper with exponential backoff. Used internally for <code>prompt()</code> calls.</div>
+                    </div>
+                </section>
+
+                <!-- HTTP API -->
+                <section id="http-api" class="doc-section">
+                    <h2>HTTP REST Server</h2>
+                    <p>The SDK includes a FastAPI server for exposing Meta AI capabilities as a REST API. Useful for microservices or integrating with non-Python applications.</p>
+
+                    <h3>Starting the Server</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-copy="python -m metaai_api.api_server">Copy</button>
+                        </div>
+                        <pre><code>python -m metaai_api.api_server</code></pre>
+                    </div>
+                    <p>Server runs on <code>http://localhost:8000</code> by default.</p>
+
+                    <h3>Endpoints</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Endpoint</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="http-method">POST</span></td>
+                                <td><code>/chat</code></td>
+                                <td>Send a text message to Meta AI</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">POST</span></td>
+                                <td><code>/image</code></td>
+                                <td>Generate images (with timeout protection)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">POST</span></td>
+                                <td><code>/video</code></td>
+                                <td>Generate videos (with auto-polling)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">POST</span></td>
+                                <td><code>/video/async</code></td>
+                                <td>Submit async video generation job</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">GET</span></td>
+                                <td><code>/video/jobs/{job_id}</code></td>
+                                <td>Check async job status</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">POST</span></td>
+                                <td><code>/video/extend</code></td>
+                                <td>Extend an existing video</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">POST</span></td>
+                                <td><code>/upload</code></td>
+                                <td>Upload an image file</td>
+                            </tr>
+                            <tr>
+                                <td><span class="http-method">GET</span></td>
+                                <td><code>/healthz</code></td>
+                                <td>Health check endpoint</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Example: Chat Endpoint</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-copy="curl -X POST http://localhost:8000/chat \
+  -H \"Content-Type: application/json\" \
+  -d '{\"message\": \"What is the capital of France?\"}'">Copy</button>
+                        </div>
+                        <pre><code>curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is the capital of France?"}'</code></pre>
+                    </div>
+
+                    <h3>Example: Image Generation Endpoint</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                            <button class="copy-btn" data-copy="curl -X POST http://localhost:8000/image \
+  -H \"Content-Type: application/json\" \
+  -d '{
+    \"prompt\": \"a beautiful sunset over mountains\",
+    \"orientation\": \"LANDSCAPE\",
+    \"num_images\": 1
+  }'">Copy</button>
+                        </div>
+                        <pre><code>curl -X POST http://localhost:8000/image \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "a beautiful sunset over mountains",
+    "orientation": "LANDSCAPE",
+    "num_images": 1
+  }'</code></pre>
+                    </div>
+                </section>
+
+                <!-- CLI -->
+                <section id="cli" class="doc-section">
+                    <h2>CLI Reference</h2>
+                    <p>The skill includes a CLI wrapper for quick terminal usage without writing Python code.</p>
+
+                    <h3>Commands</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">bash</span>
+                        </div>
+                        <pre><code># Generate an image
+python metaai_generate.py image "a beautiful sunset" --orientation LANDSCAPE --num 2
+
+# Generate a video
+python metaai_generate.py video "waves on a beach" --no-poll
+
+# Analyze an image
+python metaai_generate.py analyze photo.jpg --question "What colors dominate?"
+
+# Chat
+python metaai_generate.py chat "Tell me a joke"
+
+# Check cookie status
+python metaai_generate.py check</code></pre>
+                    </div>
+
+                    <h3>Options</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>Option</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>image</code></td>
+                                <td><code>--orientation</code></td>
+                                <td>LANDSCAPE, VERTICAL, or SQUARE</td>
+                            </tr>
+                            <tr>
+                                <td><code>image</code></td>
+                                <td><code>--num</code></td>
+                                <td>Number of images (1-4)</td>
+                            </tr>
+                            <tr>
+                                <td><code>video</code></td>
+                                <td><code>--no-poll</code></td>
+                                <td>Skip waiting for video completion</td>
+                            </tr>
+                            <tr>
+                                <td><code>analyze</code></td>
+                                <td><code>--question</code></td>
+                                <td>Custom analysis prompt</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- Examples -->
+                <section id="examples" class="doc-section">
+                    <h2>Examples</h2>
+
+                    <h3>Batch Image Generation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+import json
+
+ai = MetaAI()
+
+prompts = [
+    \"a red fox in a forest\",
+    \"a robot painting a portrait\",
+    \"an astronaut riding a horse on Mars\"
+]
+
+results = []
+for prompt in prompts:
+    result = ai.generate_image_new(prompt=prompt, num_images=1)
+    results.append(result)
+    print(f\"Done: {prompt[:30]}...\")
+
+# Save all results
+with open(\"generated_images.json\", \"w\") as f:
+    json.dump(results, f, indent=2)">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+import json
+
+ai = MetaAI()
+
+prompts = [
+    "a red fox in a forest",
+    "a robot painting a portrait",
+    "an astronaut riding a horse on Mars"
+]
+
+results = []
+for prompt in prompts:
+    result = ai.generate_image_new(prompt=prompt, num_images=1)
+    results.append(result)
+    print(f"Done: {prompt[:30]}...")
+
+# Save all results
+with open("generated_images.json", "w") as f:
+    json.dump(results, f, indent=2)</code></pre>
+                    </div>
+
+                    <h3>Multi-Modal Conversation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+
+ai = MetaAI()
+
+# Upload a chart image
+upload = ai.upload_image(\"chart.png\")
+media_id = upload[\"media_id\"]
+
+# Ask about the chart
+response = ai.prompt(
+    \"What trends does this chart show? Summarize the key insights.\",
+    media_ids=[media_id]
+)
+print(response[\"message\"])
+
+# Follow up without re-uploading
+response2 = ai.prompt(
+    \"What would the projection be for next quarter based on this data?\"
+)
+print(response2[\"message\"])">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+
+ai = MetaAI()
+
+# Upload a chart image
+upload = ai.upload_image("chart.png")
+media_id = upload["media_id"]
+
+# Ask about the chart
+response = ai.prompt(
+    "What trends does this chart show? Summarize the key insights.",
+    media_ids=[media_id]
+)
+print(response["message"])
+
+# Follow up without re-uploading
+response2 = ai.prompt(
+    "What would the projection be for next quarter based on this data?"
+)
+print(response2["message"])</code></pre>
+                    </div>
+
+                    <h3>Streaming Chat Interface</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">python</span>
+                            <button class="copy-btn" data-copy="from metaai_api import MetaAI
+import sys
+
+ai = MetaAI()
+
+print(\"Meta AI Chat (type 'quit' to exit)\")
+print(\"=\" * 40)
+
+while True:
+    user_input = input(\"\\nYou: \")
+    if user_input.lower() == \"quit\":
+        break
+
+    print(\"\\nAI: \", end=\"\", flush=True)
+    for chunk in ai.prompt(user_input, stream=True):
+        print(chunk, end=\"\", flush=True)
+    print()">Copy</button>
+                        </div>
+                        <pre><code>from metaai_api import MetaAI
+import sys
+
+ai = MetaAI()
+
+print("Meta AI Chat (type 'quit' to exit)")
+print("=" * 40)
+
+while True:
+    user_input = input("\nYou: ")
+    if user_input.lower() == "quit":
+        break
+
+    print("\nAI: ", end="", flush=True)
+    for chunk in ai.prompt(user_input, stream=True):
+        print(chunk, end="", flush=True)
+    print()</code></pre>
+                    </div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="footer">
+                    <div class="footer-grid">
+                        <div>
+                            <div class="footer-title">Meta AI SDK</div>
+                            <p class="footer-text">Unofficial Python SDK for Meta AI. Not affiliated with Meta Platforms, Inc.</p>
+                        </div>
+                        <div>
+                            <div class="footer-heading">Resources</div>
+                            <ul class="footer-links">
+                                <li><a href="https://github.com/mir-ashiq/metaai-api" target="_blank" rel="noopener">GitHub Repository</a></li>
+                                <li><a href="https://pypi.org/project/metaai-api/" target="_blank" rel="noopener">PyPI Package</a></li>
+                                <li><a href="https://meta.ai" target="_blank" rel="noopener">Meta AI</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="footer-heading">License</div>
+                            <p class="footer-text">MIT License</p>
+                            <p class="footer-text">Version 2.0.0</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Close sidebar on outside click (mobile)
+        document.addEventListener('click', (e) => {
+            if (sidebar.classList.contains('open') &&
+                !sidebar.contains(e.target) &&
+                e.target !== sidebarToggle) {
+                sidebar.classList.remove('open');
+            }
+        });
+
+        // Copy buttons
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.dataset.copy;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+        });
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('.doc-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function updateActiveNav() {
+            let current = '';
+            sections.forEach(section => {
+                const top = section.offsetTop - 100;
+                if (window.scrollY >= top) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav();
+    </script>
+</body>
+</html>
